@@ -1,0 +1,51 @@
+/** ------- Remove Update Message WP 4.5 ------- */
+
+add_action('after_setup_theme','remove_core_updates');
+function remove_core_updates()
+{
+ if(! current_user_can('update_core')){return;}
+ add_action('init', create_function('$a',"remove_action( 'init', 'wp_version_check' );"),2);
+ add_filter('pre_option_update_core','__return_null');
+ add_filter('pre_site_transient_update_core','__return_null');
+}
+
+/** --------- Perfiles de Usuario --------- **/
+add_action( 'admin_init', 'my_remove_menu_pages' );
+function my_remove_menu_pages() {
+ 
+    global $user_ID;
+ 
+    if ( current_user_can( 'editor' ) ) {
+
+		remove_menu_page( 'index.php' );                  //Dashboard
+		remove_menu_page( 'edit.php' );                   //Posts
+		remove_menu_page( 'upload.php' );                 //Media
+		remove_menu_page( 'edit.php?post_type=page' );    //Pages
+		remove_menu_page( 'edit-comments.php' );          //Comments
+		//remove_menu_page( 'themes.php' );                 //Appearance
+		//remove_menu_page( 'plugins.php' );                //Plugins
+		//remove_menu_page( 'users.php' );                  //Users
+		remove_menu_page( 'tools.php' );                  //Tools
+		// remove_menu_page( 'options-general.php' );        //Settings
+	    }
+	}
+
+// get the the role object
+$role_object = get_role( 'editor' );
+
+// add $cap capability to this role object
+$role_object->add_cap( 'edit_theme_options' );
+
+
+//Ninja Forms
+
+/* To give Editors access to the Submissions - Simply replace ‘edit_posts’ in the code snippet below with the capability 
+that you would like to attach the ability to view/edit submissions to.Please note that all three filters are needed to 
+provide proper submission viewing/editing on the backend!
+*/
+function nf_subs_capabilities( $cap ) {
+    return 'edit_posts';
+}
+add_filter( 'ninja_forms_admin_submissions_capabilities', 'nf_subs_capabilities' );
+add_filter( 'ninja_forms_admin_parent_menu_capabilities', 'nf_subs_capabilities' );
+add_filter( 'ninja_forms_admin_menu_capabilities', 'nf_subs_capabilities' );
