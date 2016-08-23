@@ -1,0 +1,218 @@
+/*---- Normal Woocomerce Hooks -----*/
+
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_sharing', 50 );
+
+
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 30 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 20 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 10 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_sharing', 50 );
+
+/*--- Removes Free! ---*/
+add_filter( 'woocommerce_free_price_html',           'hide_free_price_notice' );
+
+
+/*---- Remove price tag from product free ----*/
+function wpa_109409_is_purchasable( $purchasable, $product ){
+    if( $product->get_price() == 0 )
+        $purchasable = false;
+    return $purchasable;
+}
+
+/*----- Hoook VC below excerpt ----*/
+
+
+function woocommerce_template_product_description() {
+woocommerce_get_template( 'single-product/tabs/description.php' );
+}
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_product_description', 15 );
+
+/*------ Remove add to cart from free-------*/
+add_filter( 'woocommerce_is_purchasable', 'wpa_109409_is_purchasable', 10, 2 );
+
+remove_action( 'woocommerce_product_tabs', 'woocommerce_product_reviews_tab', 30);
+remove_action( 'woocommerce_product_tab_panels', 'woocommerce_product_reviews_panel', 30);
+
+/*--- Addd Note to woo Hook 25 ------ */
+
+function add_hook_meesage2() {
+
+	ob_start();
+	?>
+	<div>
+		<p> Hola Mundo</p>
+	</div>
+
+	<?php
+}
+
+/*----- Payment Images ----*/
+
+add_action( 'woocommerce_single_product_summary', 'add_payment_images', 35 );
+
+function add_payment_images() {
+
+	$product = new WC_Product( get_the_ID() );
+
+	if ($product->get_price() > 0) {
+		ob_start();
+		?>
+	<div class="row">
+		
+		<img id="slide-img-1" src="<?php echo get_bloginfo('template_directory');?>/images/visa-logo.png" class="slide" alt="" />
+		<img id="slide-img-1" src="<?php echo get_bloginfo('template_directory');?>/images/master-card-logo.png" class="slide" alt="" />
+		<img id="slide-img-1" src="<?php echo get_bloginfo('template_directory');?>/images/pse-logo.png" class="slide" alt="" />
+		<img id="slide-img-1" src="<?php echo get_bloginfo('template_directory');?>/images/efecty-logo.png" class="slide" alt="" />
+		<img id="slide-img-1" src="<?php echo get_bloginfo('template_directory');?>/images/baloto-logo.png" class="slide" alt="" />
+		<div class="clear"></div>
+	</div>
+
+	<?php
+
+	}
+}
+
+/*--- Addd Note to woo Hook 25 ------ */
+
+add_action( 'woocommerce_single_product_summary', 'add_hook_meesage', 15 );
+
+function add_hook_meesage() {
+
+	$product = new WC_Product( get_the_ID() );
+
+	if ($product->get_price() == 0) {
+		ob_start();
+		?>
+	<div class="row">
+		<h4>Cotizar:</h4>
+		<?php echo do_shortcode( '[contact-form-7 id="5" title="Contact form 1"]' ); ?>
+
+		<div class="clear"></div>
+	</div>
+
+	<?php
+
+	}  else {
+
+	ob_start();
+		?>
+	<div class="advicebox">
+		<h4>Instrucciones.</h4>	
+		<p>
+		1. Agrega al carrito es totalmente gratis <br>
+		2. Ve al carrito y haz clic en Ir a la Caja <br>
+		3. Llena el formulario <br>
+		<span>(Si ya estás registrado y haz llenado tus datos en tu perfil, este se llena automáticamente)</span><br>
+		4. Haz clic en Realizar el Pedido<br>
+		5. Te llevará a una página externa de PayU Latam donde escogeras tu forma de pago. <br>
+		6. Realiza el pago y te llegará un correo con tu pago.
+		</p>
+
+	</div>
+
+	<?php
+
+	}
+}
+
+
+/*------ Related products on page -------- */
+
+function woo_related_products_limit() {
+  global $product;
+	
+	$args['posts_per_page'] = 3;
+	return $args;
+}
+add_filter( 'woocommerce_output_related_products_args', 'jk_related_products_args' );
+  function jk_related_products_args( $args ) {
+	$args['posts_per_page'] = 3; // 4 related products
+	$args['columns'] = 3; // arranged in 2 columns
+	return $args;
+}
+
+/*--- Personilized Title For Woo ----*/
+
+add_action( 'woocommerce_single_product_summary', 'personalized_title_woo', 5);
+
+function personalized_title_woo() {
+
+	$product = new WC_Product( get_the_ID() );
+
+
+	ob_start();
+		?>
+	<div class="row">
+<?php
+		$gettit = $product->get_title();
+		$getbehind = substr($gettit, 0, strpos($gettit, ":"));
+
+		if(($pos = strpos($gettit, ':')) !== false)
+		{
+		   $new_str = substr($gettit, $pos + 1);
+		   	echo '<h2 class="modtitle">'.$getbehind.'</h2>';
+			echo '<h1 class="modtitle">'.$new_str.'</h1>';
+		}
+		else
+		{
+		   echo '<h1>'.$gettit.'</h1>';
+		}
+		
+
+?>
+	</div>
+<?php
+	
+
+
+}
+
+/*------- REMOVE TABS ON WOO POSTS ------*/
+add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+
+function woo_remove_product_tabs( $tabs ) {
+
+    unset( $tabs['description'] );      	// Remove the description tab
+    unset( $tabs['reviews'] ); 			// Remove the reviews tab
+    unset( $tabs['additional_information'] );  	// Remove the additional information tab
+
+    return $tabs;
+
+}
+
+/*-------- REMOVE SKU ------*/
+add_filter( 'wc_product_sku_enabled', '__return_false' );
+
+
+/*----- Time On Sale ----*/
+add_filter( 'woocommerce_get_price_html', 'custom_price_html', 100, 2 );
+function custom_price_html( $price, $product )
+{
+    global $post;
+    
+    $sales_price_to = get_post_meta($post->ID, '_sale_price_dates_to', true);
+    $sales_price_to_variable = get_post_meta($post->get_available_variations, '_sale_price_dates_to', true);
+
+    if($product->is_type( 'simple' ) && $sales_price_to != "" )
+    {
+        $sales_price_date_to = date("j M y", $sales_price_to);
+        return str_replace( '</ins>', ' </ins> <div style="margin-top:10px;">(Descuento hasta '.$sales_price_date_to.')</div>', $price );
+    }
+
+    else if ( $product->is_type( 'variable' ) ){
+    	$sales_price_date_to = date("j M y", $sales_price_to_variable);
+        return str_replace( '</ins>', ' </ins> <div style="color:white;">(Descuento hasta '.$sales_price_date_to.')</div>', $price );
+    }
+    else
+    {
+        return apply_filters( 'woocommerce_get_price', $price );
+    }
+}
