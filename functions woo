@@ -1,4 +1,4 @@
-/*---- Normal Woocomerce Hooks -----*/
+/*---- Normal Woocomerce Hooks Removes / Re Add Diferent Position-----*/
 
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
