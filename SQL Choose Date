@@ -1,0 +1,5 @@
+SELECT *
+FROM `hl2zw_cf_inscripcion_todo`
+WHERE `created` 
+BETWEEN '2016-08-23'
+AND '2016-08-23 23:59:59'
