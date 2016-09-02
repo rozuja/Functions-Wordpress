@@ -1,0 +1,8 @@
+Open wp-config.php located in your WordPress root directory and add the following 
+
+define('AUTOSAVE_INTERVAL', 300 ); // seconds
+define('WP_POST_REVISIONS', false );
+
+PHP My Admin on wp_posts
+
+DELETE FROM wp_posts WHERE post_type = "revision";
