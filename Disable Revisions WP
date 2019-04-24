@@ -6,3 +6,5 @@ define('WP_POST_REVISIONS', false );
 PHP My Admin on wp_posts
 
 DELETE FROM wp_posts WHERE post_type = "revision";
+
+Hola
